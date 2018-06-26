@@ -47,41 +47,51 @@ services:
           port: 50555
           targetPort: 50555
 
+etcd-operator:
+  customResources:
+    createEtcdClusterCRD: true
+
+envoyForEtcdImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-envoy:1.1'
+grafanaImage: 'kamon/grafana_graphite:3.0'
+netconfImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-netconf:1.1'
+ofagentImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-ofagent:1.1'
+dashdImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-dashd:1.0'
+shovelImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-shovel:1.0'
+vcliImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-cli:1.1'
+vcoreImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-voltha:gold.6.25'
+
 kafka:
-  enabled: false
+  enabled: true
   persistence:
     enabled: false
   zookeeper:
     persistence:
       enabled: false
-
 etcd:
   operator:
     enabled: true
-etcd-operator:
-  customResources:
-    size: 1
-    createEtcdClusterCRD: true
-
-kafkaReleaseName: voltha-kafka
-etcdReleaseName: voltha-etcd
-
 consul:
   enabled: false
 
-envoyForEtcdImage: 'voltha/voltha-envoy:latest'
-freeradiusImage: 'tpdock/freeradius:latest'
-grafanaImage: 'kamon/grafana_graphite:3.0'
-netconfImage: 'voltha/voltha-netconf:latest'
-ofagentImage: 'voltha/voltha-ofagent:latest'
-dashdImage: 'voltha/voltha-dashd:latest'
-shovelImage: 'voltha/voltha-shovel:latest'
-vcliImage: 'voltha/voltha-cli:latest'
-vcoreImage: 'voltha/voltha-voltha:latest'
 
 # Need the namespace global for kafka
 global:
   namespace: voltha
+
+stats:
+  #dashd_args:
+  #- "/dashd/dashd/main.py"
+  #- "--kafka={{ .Release.Name }}-kafka.default.svc.cluster.local"
+  #- "--grafana_url=http://admin:admin@grafana.$(NAMESPACE).svc.cluster.local:80/api"
+  #- "--topic=voltha.kpis"
+  #- "--consul=consul:8500"
+
+  #shovel_args:
+  #- "/shovel/shovel/main.py"
+  #- "--kafka={{ .Release.Name }}-kafka.default.svc.cluster.local"
+  #- "--host=grafana.voltha.svc.cluster.local"
+  #- "--topic=voltha.kpis"
+  #- "--consul=consul:8500"
 
 vcli_args:
 - "/cli/cli/setup.sh"
@@ -89,6 +99,18 @@ vcli_args:
 - "-g voltha:50555"
 - "-s voltha:18880"
 - "-G"
+
+#vcore_etcd_args:
+#- "voltha/voltha/main.py"
+#- "-v"
+#- "--etcd=etcd-restore-operator.default.svc.cluster.local:2379"
+#- "--kafka={{ .Release.Name }}-kafka.default.svc.cluster.local"
+#- "--rest-port=8880"
+#- "--grpc-port=50556"
+#- "--interface=eth1"
+#- "--backend=etcd"
+#- "--pon-subnet=10.38.0.0/12"
+#- "--ponsim-comm=grpc"
 
 ofagent_args:
 - "/ofagent/ofagent/main.py"
