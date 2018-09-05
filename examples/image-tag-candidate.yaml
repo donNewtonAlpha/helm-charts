@@ -20,6 +20,7 @@ xos_coreImage: 'xosproject/xos-core:candidate'
 xos_chameleonImage: 'xosproject/chameleon:candidate'
 xos_toscaImage: 'xosproject/xos-tosca:candidate'
 xos_api_testerImage: 'xosproject/xos-api-tester:candidate'
+tosca_loaderImage: 'xosproject/tosca-loader:candidate'
 
 # in xos-gui sub-chart required by xos-core chart
 xos-gui:
@@ -29,8 +30,12 @@ xos-gui:
 # in RCORD service chart
 addressmanager:
   addressmanager_synchronizerImage: 'xosproject/addressmanager-synchronizer:candidate'
+att-workflow-driver:
+  attWorkflowDriver_synchronizerImage: 'xosproject/att-workflow-driver-synchronizer:candidate'
 fabric:
   fabric_synchronizerImage: 'xosproject/fabric-synchronizer:candidate'
+fabric-crossconnect:
+  fabric_crossconnect_synchronizerImage: 'xosproject/fabric-crossconnect-synchronizer:candidate'
 onos-service:
   onos_synchronizerImage: 'xosproject/onos-synchronizer:candidate'
 volt:
@@ -77,6 +82,6 @@ exampleservice:
   exampleservice_synchronizerImage: 'xosproject/exampleservice-synchronizer:candidate'
 simpleexampleservice:
   simpleexampleservice_synchronizerImage: 'xosproject/simpleexampleservice-synchronizer:candidate'
-hippieOSS:
-  hippieOSS_synchronizerImage: 'xosproject/hippie-oss-synchronizer:candidate'
+
+hippieOSS_synchronizerImage: 'xosproject/hippie-oss-synchronizer:candidate'
 

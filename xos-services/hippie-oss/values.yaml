@@ -29,6 +29,8 @@ hippieOSS_synchronizerImage: "xosproject/hippie-oss-synchronizer:master"
 xosAdminUser: "admin@opencord.org"
 xosAdminPassword: "letmein"
 
+kafkaService: "cord-kafka"
+
 resources: {}
 
 nodeSelector: {}

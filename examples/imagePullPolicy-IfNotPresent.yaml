@@ -23,7 +23,11 @@ xos-gui:
 # in RCORD service chart
 addressmanager:
   imagePullPolicy: 'IfNotPresent'
+att-workflow-driver:
+  imagePullPolicy: 'IfNotPresent'
 fabric:
+  imagePullPolicy: 'IfNotPresent'
+fabric-crossconnect:
   imagePullPolicy: 'IfNotPresent'
 onos-service:
   imagePullPolicy: 'IfNotPresent'
@@ -70,6 +74,4 @@ kubernetes:
 exampleservice:
   imagePullPolicy: 'IfNotPresent'
 simpleexampleservice:
-  imagePullPolicy: 'IfNotPresent'
-hippieOSS:
   imagePullPolicy: 'IfNotPresent'

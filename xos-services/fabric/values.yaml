@@ -1,5 +1,4 @@
 ---
-
 # Copyright 2018-present Open Networking Foundation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,6 +29,8 @@ fabric_synchronizerImage: "xosproject/fabric-synchronizer:master"
 xosAdminUser: "admin@opencord.org"
 xosAdminPassword: "letmein"
 
+kafkaService: "cord-kafka"
+
 resources: {}
 
 nodeSelector: {}
@@ -37,4 +38,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-

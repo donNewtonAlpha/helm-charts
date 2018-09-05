@@ -43,6 +43,7 @@ services:
         - name: mystery2
           port: 8443
           targetPort: 8443
+          nodePort: 32443
         - name: grpc
           port: 50555
           targetPort: 50555
@@ -50,15 +51,6 @@ services:
 etcd-operator:
   customResources:
     createEtcdClusterCRD: true
-
-envoyForEtcdImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-envoy:1.1'
-grafanaImage: 'kamon/grafana_graphite:3.0'
-netconfImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-netconf:1.1'
-ofagentImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-ofagent:1.1'
-dashdImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-dashd:1.0'
-shovelImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-shovel:1.0'
-vcliImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-cli:1.1'
-vcoreImage: 'docker-repo.dev.atl.foundry.att.com:5000/voltha-voltha:gold.6.25'
 
 kafka:
   enabled: true
@@ -73,6 +65,12 @@ etcd:
 consul:
   enabled: false
 
+envoyForEtcdImage: 'voltha/voltha-envoy:1.4.0'
+freeradiusImage: 'tpdock/freeradius:latest'
+netconfImage: 'voltha/voltha-netconf:1.4.0'
+ofagentImage: 'voltha/voltha-ofagent:1.4.0'
+vcliImage: 'voltha/voltha-cli:1.4.0'
+vcoreImage: 'voltha/voltha-voltha:1.4.0'
 
 # Need the namespace global for kafka
 global:
@@ -116,11 +114,8 @@ ofagent_args:
 - "/ofagent/ofagent/main.py"
 - "-v"
 - "--consul=consul.$(NAMESPACE).svc.cluster.local:8500"
-- "--controller=onos-voltha-openflow:6653"
+- "--controller=onos-openflow.default.svc.cluster.local:6653"
 - "--grpc-endpoint=vcore.$(NAMESPACE).svc.cluster.local:50556"
-- "--enable-tls"
-- "--key-file=/ofagent/pki/voltha.key"
-- "--cert-file=/ofagent/pki/voltha.crt"
 
 netconf_args:
 - "/netconf/netconf/main.py"

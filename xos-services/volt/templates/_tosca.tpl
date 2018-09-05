@@ -26,9 +26,10 @@ topology_template:
       type: tosca.nodes.VOLTService
       properties:
         name: volt
-        voltha_url: voltha.voltha.svc.cluster.local
+        kind: data
+        voltha_url: {{ .volthaRestService | quote }}
         voltha_port: 8882
-        onos_voltha_url: onos-voltha-ui.voltha.svc.cluster.local
+        onos_voltha_url: {{ .onosRestService | quote }}
         onos_voltha_port: 8181
         onos_voltha_user: karaf
         onos_voltha_pass: karaf

@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: xos-gui
-          image: {{ .Values.xos_guiImage | quote }}
+          image: {{ tpl .Values.xos_guiImage . | quote }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
             - containerPort: 4000
@@ -41,6 +41,9 @@ spec:
             - name: app-config
               mountPath: /var/www/dist/app.config.js
               subPath: app/app.config.js
+            - name: cord-version
+              mountPath: /var/www/dist/version.json
+              subPath: version.json
             - name: extensions-volume
               mountPath: /var/www/dist/extensions
       volumes:
@@ -56,5 +59,11 @@ spec:
             items:
               - key: config
                 path: app/app.config.js
+        - name: cord-version
+          configMap:
+            name: gui-cord-version
+            items:
+              - key: config
+                path: version.json
         - name: extensions-volume
           emptyDir: {}
