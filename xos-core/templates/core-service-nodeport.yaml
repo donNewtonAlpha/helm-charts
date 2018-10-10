@@ -1,5 +1,5 @@
 ---
-# Copyright 2018-present Open Networking Foundation
+# Copyright 2017-present Open Networking Foundation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,23 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Default values for the base-openstack profile.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-replicaCount: 1
-
-nameOverride: ""
-fullnameOverride: ""
-
-imagePullPolicy: 'IfNotPresent'
-
-tosca_loaderImage: "xosproject/tosca-loader:1.0.1"
-
-xos_api_testerImage: 'xosproject/xos-api-tester:master'
-
-xosAdminUser: "admin@opencord.org"
-xosAdminPassword: "letmein"
-
-cordSiteName: "mysite"
-cordDeploymentName: "mydeployment"
+apiVersion: v1
+kind: Service
+metadata:
+  name: "xos-core-prometheus"
+  labels:
+    {{- include "xos-core.release_labels" . | indent 4 }}
+spec:
+  type: NodePort
+  selector:
+    app: "xos-core"
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: prometheus
+      nodePort: {{ .Values.xos_prometheusNodePort }}
+      protocol: TCP

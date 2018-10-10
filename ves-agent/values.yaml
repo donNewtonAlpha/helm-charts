@@ -1,11 +1,10 @@
----
-# Copyright 2018-present Open Networking Foundation
+# Copyright 2018- Cisco
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,23 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Default values for the base-openstack profile.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 replicaCount: 1
-
 nameOverride: ""
-fullnameOverride: ""
 
-imagePullPolicy: 'IfNotPresent'
+image:
+  repository: registry.hub.docker.com/opencord/ves-agent
+  tag: latest
+  pullPolicy: Always
 
-tosca_loaderImage: "xosproject/tosca-loader:1.0.1"
+co_id: test_co
+pod_id: test_pod
 
-xos_api_testerImage: 'xosproject/xos-api-tester:master'
+onap:
+  ves_address: "onap"
+  ves_port: 30235
 
-xosAdminUser: "admin@opencord.org"
-xosAdminPassword: "letmein"
+kafka:
+  address: "cord-kafka"
+  port: "9092"
+  alarms_topic: "kafka.alarms"
+  kpis_topic: "kafka.kpis"
 
-cordSiteName: "mysite"
-cordDeploymentName: "mydeployment"
+service:
+  type: ClusterIP
+  port: 8080

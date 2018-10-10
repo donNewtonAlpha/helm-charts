@@ -1,5 +1,5 @@
 ---
-# Copyright 2018-present Open Networking Foundation
+# Copyright 2017-present Open Networking Foundation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,23 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Default values for the base-openstack profile.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+pull_docker_registry:
 
-replicaCount: 1
+images:
+  ovs_plugin:
+    repository: gopinatht/ovs-plugin-installer
+    tag: 'latest'
+    pullPolicy: 'Always'
 
-nameOverride: ""
-fullnameOverride: ""
-
-imagePullPolicy: 'IfNotPresent'
-
-tosca_loaderImage: "xosproject/tosca-loader:1.0.1"
-
-xos_api_testerImage: 'xosproject/xos-api-tester:master'
-
-xosAdminUser: "admin@opencord.org"
-xosAdminPassword: "letmein"
-
-cordSiteName: "mysite"
-cordDeploymentName: "mydeployment"
