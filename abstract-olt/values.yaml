@@ -13,6 +13,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: vepcservice
-description: A Helm chart for XOS's "vepcservice" service
-version: 1.0.0
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: 'opencord/abstract-olt'
+  tag: '{{ .Chart.AppVersion }}'
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  grpcPort: 31777
+  restApiPort: 31778
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+annotations: {}

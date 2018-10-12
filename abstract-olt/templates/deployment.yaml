@@ -16,50 +16,35 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "vepcservice.fullname" . }}
+  name: {{ template "abstract-olt.fullname" . }}
   labels:
-    app: {{ template "vepcservice.name" . }}
-    chart: {{ template "vepcservice.chart" . }}
+    app: {{ template "abstract-olt.name" . }}
+    chart: {{ template "abstract-olt.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "vepcservice.name" . }}
+      app: {{ template "abstract-olt.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "vepcservice.name" . }}
+        app: {{ template "abstract-olt.name" . }}
         release: {{ .Release.Name }}
+    {{- with .Values.annotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: {{ tpl .Values.vepcservice_synchronizerImage . | quote }}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ tpl .Values.image.tag . }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/app/AbstractOLT", "-log_file", "/dev/stdout"]
           resources:
 {{ toYaml .Values.resources | indent 12 }}
-          volumeMounts:
-            - name: vepcservice-config
-              mountPath: /opt/xos/synchronizers/vepcservice/vepcservice_config.yaml
-              subPath: vepcservice_config.yaml
-            - name: certchain-volume
-              mountPath: /usr/local/share/ca-certificates/local_certs.crt
-              subPath: config/ca_cert_chain.pem
-      volumes:
-        - name: vepcservice-config
-          configMap:
-            name: vepcservice
-            items:
-              - key: serviceConfig
-                path: vepcservice_config.yaml
-        - name: certchain-volume
-          configMap:
-            name: ca-certificates
-            items:
-              - key: chain
-                path: config/ca_cert_chain.pem
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
