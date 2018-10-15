@@ -61,7 +61,7 @@ topology_template:
         name: olt
         app_id: org.opencord.olt
         url: {{ .oltAppUrl }}
-        version: 2.0.0.SNAPSHOT
+        version: 2.1.0.SNAPSHOT
         dependencies: org.opencord.sadis
       requirements:
         - owner:
@@ -146,21 +146,6 @@ topology_template:
       requirements:
         - service_instance:
             node: onos_app#olt
-            relationship: tosca.relationships.BelongsToOne
-
-    dhcpl2relay-config-attr:
-      type: tosca.nodes.ServiceInstanceAttribute
-      properties:
-        name: /onos/v1/network/configuration/apps/org.opencord.dhcpl2relay
-        value: >
-          {
-            "dhcpl2relay" : {
-              "useOltUplinkForServerPktInOut" : true
-            }
-          }
-      requirements:
-        - service_instance:
-            node: onos_app#dhcpl2relay
             relationship: tosca.relationships.BelongsToOne
 
     aaa-config-attr:
