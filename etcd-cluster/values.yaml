@@ -7,6 +7,9 @@ clusterName: "etcd-cluster"
 clusterSize: 3
 memoryLimit: 1024Mi
 autoCompactionRetention: "12"
-etcdVersion: "3.2.13"
 
+etcdCluster:
+  image:
+    repository: "quay.io/coreos/etcd"
+    tag: "3.2.18"
 
