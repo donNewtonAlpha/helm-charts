@@ -12,4 +12,4 @@ spec:
     - name: ETCD_AUTO_COMPACTION_RETENTION
       value: {{ quote .Values.autoCompactionRetention }}
   version: {{ quote .Values.etcdCluster.image.tag }}
-  repository: {{ quote .Values.etcdCluster.image.repository }}
+  baseImage: {{ quote .Values.etcdCluster.image.repository }}
