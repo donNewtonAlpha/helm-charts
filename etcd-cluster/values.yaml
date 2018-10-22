@@ -10,6 +10,7 @@ autoCompactionRetention: "12"
 
 etcdCluster:
   image:
+    busyboxImage: "busybox:1.28.1-glibc"
     repository: "quay.io/coreos/etcd"
     tag: "3.2.18"
 

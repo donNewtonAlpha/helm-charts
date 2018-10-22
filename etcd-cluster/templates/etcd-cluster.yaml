@@ -11,5 +11,6 @@ spec:
     etcdEnv:
     - name: ETCD_AUTO_COMPACTION_RETENTION
       value: {{ quote .Values.autoCompactionRetention }}
+    busyboxImage: {{ quote .Values.etcdCluster.image.busyboxImage }}
   version: {{ quote .Values.etcdCluster.image.tag }}
-  baseImage: {{ quote .Values.etcdCluster.image.repository }}
+  repository: {{ quote .Values.etcdCluster.image.repository }}
