@@ -1,5 +1,5 @@
 ---
-# Copyright 2017-present Open Networking Foundation
+# Copyright 2018-present Open Networking Foundation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,21 +14,11 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: "xos-core"
+  name: grafana-dashboard-onos
   labels:
-    {{- include "xos-core.release_labels" . | indent 4 }}
-spec:
-  type: ClusterIP
-  selector:
-    app: "xos-core"
-  ports:
-    - port: 50051
-      name: secure
-      targetPort: 50051
-      protocol: TCP
-    - port: 50055
-      name: insecure
-      targetPort: 50055
-      protocol: TCP
+     grafana_dashboard: "1"
+data:
+  onos.json: |
+{{ .Files.Get "grafana-dashboards/onos-kpi.json" | indent 4 }}

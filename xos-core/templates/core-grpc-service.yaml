@@ -16,15 +16,22 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: voltha-kpi-exporter
+  name: "xos-core"
   labels:
-    release: {{ .Release.Name }}
+    {{- include "xos-core.release_labels" . | indent 4 }}
 spec:
   type: NodePort
-  ports:
-    - port: 8080
-      targetPort: 8080
-      nodePort: {{ .Values.nem_voltha_kpi_exporter_nodePort }}
-      protocol: TCP
   selector:
-    app: "voltha-kpi-exporter"
+    app: "xos-core"
+  ports:
+    - port: 50051
+      targetPort: 50051
+      name: secure
+      nodePort: {{ .Values.xos_core_gRPCSecureNodePort }}
+      protocol: TCP
+    - port: 50055
+      targetPort: 50055
+      name: insecure
+      nodePort: {{ .Values.xos_core_gRPCInsecureNodePort }}
+      protocol: TCP
+
