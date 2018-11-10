@@ -48,6 +48,9 @@ etcd:
   cluster:
     enabled: true
 
+freeradius:
+  enable: true
+
 images:
   vcore:
     repository: 'voltha/voltha-voltha'
