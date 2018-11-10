@@ -2,7 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-
 clusterName: "etcd-cluster"
 clusterSize: 3
 memoryLimit: 1024Mi
