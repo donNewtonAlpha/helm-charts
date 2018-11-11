@@ -28,3 +28,6 @@ images:
   busybox:
     repository: "busybox"
     tag: "1.28.1-glibc"
+
+global:
+  registry: ""
