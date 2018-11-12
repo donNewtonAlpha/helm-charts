@@ -49,7 +49,10 @@ etcd:
     enabled: true
 
 freeradius:
-  enable: true
+  enabled: true
+
+kafkaReleaseName: cord-kafka
+etcdReleaseName: etcd-cluster
 
 images:
   vcore:
