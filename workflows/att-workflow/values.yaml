@@ -13,18 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# configure ONOS
-#
-# helm install onos -f configs/onos.yaml -n onos
+# Default values for the att-workflow profile.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
 
-onos_env:
-- name: POD_IP
-  valueFrom:
-  fieldRef:
-    fieldPath: status.podIP
-- name: NAMESPACE
-  valueFrom:
-  fieldRef:
-    fieldPath: metadata.namespace
-- name: ONOS_APPS
-  value: "drivers,openflow-base"
+
+nameOverride: ""
+fullnameOverride: ""
+
+images:
+  tosca_loader:
+    repository: 'xosproject/tosca-loader'
+    tag: '{{ .Chart.AppVersion }}'
+    pullPolicy: 'Always'
+
+global:
+  registry: ""
+
+xosAdminUser: "admin@opencord.org"
+xosAdminPassword: "letmein"

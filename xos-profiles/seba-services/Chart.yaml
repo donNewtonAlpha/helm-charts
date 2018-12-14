@@ -14,8 +14,8 @@
 # limitations under the License.
 
 apiVersion: v1
-name: att-workflow
-description: A Helm chart for XOS's "att-workflow" profile
+name: seba-services
+description: A Helm chart for XOS's "SEBA" profile
 icon: https://guide.opencord.org/logos/cord.svg
 version: 1.0.1
 
