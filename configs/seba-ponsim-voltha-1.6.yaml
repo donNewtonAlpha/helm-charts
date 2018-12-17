@@ -13,9 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: volt
-description: A Helm chart for XOS's "olt-service" service
-icon: https://guide.opencord.org/logos/cord.svg
+# Values file for deploying SEBA with Ponsim
+# Use this file to deploy the service versions speecified in the Helm charts.
 
-version: 2.1.8
-appVersion: 2.1.13
+# voltha
+etcd-cluster:
+  clusterSize: 1
+
+images:
+# VOLTHA
+  vcore:
+    tag: 'voltha-1.6'
+  vcli:
+    tag: 'voltha-1.6'
+  ofagent:
+    tag: 'voltha-1.6'
+  netconf:
+    tag: 'voltha-1.6'
+  envoy_for_etcd:
+    tag: 'voltha-1.6'
+  alarm_generator:
+    tag: 'voltha-1.6'
+# Ponsimv2
+  olt:
+    tag: "voltha-1.6"
+  onu:
+    tag: "voltha-1.6"
+  rg:
+    tag: "voltha-1.6"
