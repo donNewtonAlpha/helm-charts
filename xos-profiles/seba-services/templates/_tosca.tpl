@@ -93,19 +93,6 @@ topology_template:
             node: service#onos
             relationship: tosca.relationships.BelongsToOne
 
-    onos_app#aaa:
-      type: tosca.nodes.ONOSApp
-      properties:
-        name: aaa
-        app_id: org.opencord.aaa
-        url: {{ .aaaAppUrl }}
-        version: {{ .aaaAppVersion }}
-        dependencies: org.opencord.sadis
-      requirements:
-        - owner:
-            node: service#onos
-            relationship: tosca.relationships.BelongsToOne
-
     onos_app#kafka:
       type: tosca.nodes.ONOSApp
       properties:
@@ -113,7 +100,6 @@ topology_template:
         app_id: org.opencord.kafka
         url: {{ .kafkaAppUrl }}
         version: {{ .kafkaAppVersion }}
-        dependencies: org.opencord.olt,org.opencord.aaa,org.opencord.dhcpl2relay
       requirements:
         - owner:
             node: service#onos
@@ -135,37 +121,6 @@ topology_template:
             node: onos_app#kafka
             relationship: tosca.relationships.BelongsToOne
 
-    olt-config-attr:
-      type: tosca.nodes.ServiceInstanceAttribute
-      properties:
-        name: /onos/v1/configuration/org.opencord.olt.impl.Olt?preset=true
-        value: >
-          {
-            "enableDhcpOnProvisioning" : true
-          }
-      requirements:
-        - service_instance:
-            node: onos_app#olt
-            relationship: tosca.relationships.BelongsToOne
-
-    aaa-config-attr:
-      type: tosca.nodes.ServiceInstanceAttribute
-      properties:
-        name: /onos/v1/network/configuration/apps/org.opencord.aaa
-        value: >
-          {
-            "AAA" : {
-              "radiusConnectionType" : "socket",
-              "radiusHost" : "freeradius.voltha.svc.cluster.local",
-              "radiusServerPort" : "1812",
-              "radiusSecret" : "SECRET"
-            }
-          }
-      requirements:
-        - service_instance:
-            node: onos_app#aaa
-            relationship: tosca.relationships.BelongsToOne
-
     sadis-config-attr:
       type: tosca.nodes.ServiceInstanceAttribute
       properties:
@@ -180,6 +135,16 @@ topology_template:
                 },
                 "url" : "http://sadis-service:8000/subscriber/%s"
               }
+            },
+            "bandwidthprofile":{
+               "integration":{
+                  "url": "http://sadis-service:8000/bandwidthprofiles/%s",
+                  "cache":{
+                     "enabled":true,
+                     "maxsize":40,
+                     "ttl":"PT1m"
+                  }
+               }
             }
           }
       requirements:
@@ -222,10 +187,8 @@ topology_template:
 tosca_definitions_version: tosca_simple_yaml_1_0
 description: Some basic fixtures
 imports:
-  - custom_types/deployment.yaml
   - custom_types/networkparametertype.yaml
   - custom_types/networktemplate.yaml
-  - custom_types/siterole.yaml
 topology_template:
   node_templates:
 
@@ -257,22 +220,6 @@ topology_template:
       properties:
         name: neutron_port_name
 
-# ----------------------------------------------------------------------------
-# Roles
-# ----------------------------------------------------------------------------
-    siterole#admin:
-      type: tosca.nodes.SiteRole
-      properties:
-        role: admin
-    siterole#pi:
-      type: tosca.nodes.SiteRole
-      properties:
-        role: pi
-    siterole#tech:
-      type: tosca.nodes.SiteRole
-      properties:
-        role: tech
-
 # -----------------------------------------------------------------------------
 # Network Templates
 # -----------------------------------------------------------------------------
@@ -299,13 +246,6 @@ topology_template:
         translation: none
         shared_network_name: ext-net
 
-# -----------------------------------------------------------------------------
-# Deployment
-# -----------------------------------------------------------------------------
-    MyDeployment:
-      type: tosca.nodes.Deployment
-      properties:
-        name: MyDeployment
 {{- end -}}
 
 
@@ -414,9 +354,4 @@ topology_template:
         - provider_service:
             node: service#onos
             relationship: tosca.relationships.BelongsToOne
-
-    constraints:
-      type: tosca.nodes.ServiceGraphConstraint
-      properties:
-        constraints: '[[null, "rcord", null], [null, "volt", null], ["onos", "fabric-crossconnect", "att-workflow-driver"], ["fabric", null, null]]'
 {{- end -}}

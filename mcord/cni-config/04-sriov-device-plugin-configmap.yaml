@@ -17,7 +17,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: multus-certs
+  name: multus-scripts
   namespace: kube-system
 data:
   install-certs.sh: |
@@ -29,7 +29,7 @@ data:
     KUBE_CA_FILE=$SERVICE_ACCOUNT_PATH/ca.crt
     TLS_CFG="certificate-authority-data: $(cat $KUBE_CA_FILE | base64 | tr -d '\n')"
     SERVICEACCOUNT_TOKEN=$(cat $SERVICE_ACCOUNT_PATH/token)
-    #cat > /host/etc/cni/net.d/multus-kubeconfig <<EOF
+    cat > /host/etc/cni/net.d/multus-kubeconfig <<EOF
     # Kubeconfig file for Multus CNI plugin.
     apiVersion: v1
     kind: Config
@@ -49,6 +49,28 @@ data:
         user: multus
     current-context: multus-context
     EOF
+  install-multus-conf.sh: |
+    # If multus config is already exist on nodes (e.g. from kubespray installation)
+    # Then we don't need to create one by the script.
+    if [ -f /host/etc/cni/net.d/00-multus.conf ]; then
+      exit 0;
+    fi
+
+    # Select the mainly CNI plugin's configuration and insert into multus's config
+    MASTER_PLUGIN="$(ls /host/etc/cni/net.d | grep -E '\.conf(list)?$' | grep -v 'multus' | head -1)"
+    MASTER_PLUGIN_JSON="$(cat /host/etc/cni/net.d/$MASTER_PLUGIN)"
+    cat > /host/etc/cni/net.d/00-multus.conf <<EOF
+    {
+      "name": "multus-cni-network",
+      "type": "multus",
+      "logFile": "/var/log/multus.log",
+      "logLevel": "debug",
+      "kubeconfig": "/etc/cni/net.d/multus-kubeconfig",
+      "delegates": [
+                   $MASTER_PLUGIN_JSON
+      ]
+    }
+    EOF
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -65,30 +87,6 @@ data:
           "rootDevices": ["04:00.0"],
           "sriovMode": true,
           "deviceType": "netdevice"
-        }
-      ]
-    }
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: multus-conf
-  namespace: kube-system
-data:
-  01-cni-conf.json: |
-    {
-      "name": "multus-cni-network",
-      "type": "multus",
-      "logLevel": "debug",
-      "logFile": "/tmp/multus.log",
-      "kubeconfig": "/etc/cni/net.d/multus-kubeconfig",
-      "delegates": [
-        {
-          "name": "cbr0",
-          "type": "flannel",
-          "delegate": {
-            "isDefaultGateway": true
-          }
         }
       ]
     }

@@ -19,4 +19,6 @@ kind: ConfigMap
 metadata:
   name: ponsim-pod-tosca
 data:
-{{ (.Files.Glob "tosca/*").AsConfig | indent 2 }}
+{{- $workflowpath := printf "tosca/%s/*" .Values.workflow }}
+{{ tpl (.Files.Glob $workflowpath).AsConfig . | indent 2 }}
+{{ tpl (.Files.Glob "tosca/*").AsConfig . | indent 2 }}

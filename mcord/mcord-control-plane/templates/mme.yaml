@@ -1,5 +1,6 @@
 ---
-# Copyright 2017-present Open Networking Foundation
+# Copyright 2018-present Open Networking Foundation
+# Copyright 2018 Intel Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,17 +22,25 @@ metadata:
 spec:
   selector:
     app: mme
-  type: NodePort
+  clusterIP: None
   ports:
-  - name: s11
-    port: {{ .Values.mme.ports.s11 }}
-    protocol: UDP
   - name: s1ap
     port: {{ .Values.mme.ports.s1ap }}
-    protocol: TCP
-  - name: s6a
-    port: {{ .Values.mme.ports.s6a }}
-    protocol: TCP
+    protocol: SCTP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mme-external
+spec:
+  selector:
+    app: mme
+  type: NodePort
+  ports:
+    - name: s1ap
+      port: {{ .Values.mme.ports.s1ap }}
+      nodePort: {{ .Values.mme.ports.s1ap_external }}
+      protocol: SCTP
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -50,6 +59,8 @@ spec:
       labels:
         app: mme
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: "{{ .Values.mme_node_selector }}"
       terminationGracePeriodSeconds: 1
       initContainers:
       - name: init-mme
@@ -62,28 +73,28 @@ spec:
               - NET_ADMIN
         args:
         - until nslookup {{ .Values.hss_hostname }}; do echo waiting for hss; sleep 2; done;
-        - iptables -A OUTPUT -p sctp --sport {{ .Values.mme.ports.s1ap }} --chunk-types any ABORT -j DROP;
+          iptables -A OUTPUT -p sctp --sport {{ .Values.mme.ports.s1ap }} --chunk-types any ABORT -j DROP;
       containers:
       - name: mme
         image: {{ .Values.mme.images.mme }}
         imagePullPolicy: Always
         env:
           - name: SGW_S11_IP
-            value: {{ .Values.spgwc_hostname }}
+            value: {{ .Values.spgwc_hostname }}.{{ .Values.namespace }}.svc.cluster.local
           - name: MME_ETH0_IP
             valueFrom:
               fieldRef:
                 fieldPath: status.podIP
           - name: ENB_S1AP_IP
-            value: {{ .Values.mme.enb_s1ap_ip }}
+            value: {{ .Values.accelleran_hostname }}
           - name: ENB_S1AP_PORT
-            value: "{{ .Values.mme.ports.s1ap }}"   #ng4t uses 32767
+            value: "{{ .Values.accelleran_port }}"   #ng4t uses 32767
           - name: CONNECT_PEER
-            value: {{ .Values.hss_hostname }}
+            value: hss-0.{{ .Values.hss_hostname }}.{{ .Values.namespace }}.svc.cluster.local
           - name: VAR_HSS_REALM
-            value: {{ .Values.hss_hostname }}
+            value: {{ .Values.hss_hostname }}.{{ .Values.namespace }}.svc.cluster.local
           - name: HSS_S6A_IP
-            value: {{ .Values.hss_hostname }}
+            value: hss-0.{{ .Values.hss_hostname }}.{{ .Values.namespace }}.svc.cluster.local
           - name: HSS_PORT
             value: "{{ .Values.mme.ports.s6a }}"
         stdin: true

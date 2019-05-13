@@ -25,11 +25,10 @@ spec:
     "type": "sriov",
     "name": "s1u-net",
     "ipam": {
-        "type": "host-local",
-        "subnet": "119.0.0.0/24",
-        "routes": [
-            { "dst": "0.0.0.0/0" }
-        ]
+        "type": "centralip",
+        "ipType": "cluster",
+        "etcdURL": "http://node1:32379",
+        "network": "119.0.0.0/24"
     }
 }'
 ---
@@ -44,10 +43,27 @@ spec:
     "type": "sriov",
     "name": "sgi-net",
     "ipam": {
-        "type": "host-local",
-        "subnet": "13.1.1.0/24",
-        "routes": [
-            { "dst": "0.0.0.0/0" }
-        ]
+        "type": "centralip",
+        "ipType": "cluster",
+        "etcdURL": "http://node1:32379",
+        "network": "13.0.0.0/24"
+    }
+}'
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: bbu-net
+  annotations:
+    k8s.v1.cni.cncf.io/resourceName: intel.com/sriov
+spec:
+  config: '{
+    "type": "sriov",
+    "name": "bbu-net",
+    "ipam": {
+        "type": "centralip",
+        "ipType": "cluster",
+        "etcdURL": "http://node1:32379",
+        "network": "116.0.0.0/24"
     }
 }'

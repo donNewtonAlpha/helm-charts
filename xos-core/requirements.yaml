@@ -15,10 +15,9 @@
 
 dependencies:
 - name: xos-db
-  version: 1.0.0
+  version: 1.0.1
   repository: file://../xos-db
 - name: xos-gui
-  version: 1.2.1
+  version: 1.2.4
   repository: file://../xos-gui
   condition: xos-gui.enabled
-

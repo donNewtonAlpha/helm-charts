@@ -13,9 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: volt
-description: A Helm chart for XOS's "olt-service" service
-icon: https://guide.opencord.org/logos/cord.svg
-
-version: 2.1.10
-appVersion: 2.1.16
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tt-workflow-driver
+data:
+  serviceConfig: |
+{{ include "tt-workflow-driver.serviceConfig" . | indent 4 }}

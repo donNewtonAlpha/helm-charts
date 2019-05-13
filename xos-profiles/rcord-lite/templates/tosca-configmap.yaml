@@ -19,12 +19,10 @@ kind: ConfigMap
 metadata:
   name: rcord-lite-tosca
 data:
-  010-fixtures.yaml: |
-{{ include "rcord-lite.basicFixturesTosca" . | indent 4 }}
   020-rcord-subscriber-service.yaml: |
 {{ include "rcord.serviceTosca" .Values.rcord | indent 4 }}
   030-volt-service.yaml: |
-{{ include "volt.serviceTosca" .Values.volt | indent 4 }}
+{{ include "volt.serviceTosca" (index .Values "olt-service") | indent 4 }}
   040-vsg-hw-service.yaml: |
 {{ include "vsg-hw.serviceTosca" (index .Values "vsg-hw") | indent 4 }}
   050-vrouter-service.yaml: |

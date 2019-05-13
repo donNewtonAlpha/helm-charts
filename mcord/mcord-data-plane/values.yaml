@@ -1,5 +1,6 @@
 ---
-# Copyright 2017-present Open Networking Foundation
+# Copyright 2018-present Open Networking Foundation
+# Copyright 2018 Intel Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,24 +18,29 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-controlplane_hostname: "ngic-cp"
-controlplane_port: 21
+redis_hostname: "redis"
+accelleran_hostname: "accelleran"
+mme_hostname: "mme"
+# CP is on REMOTE node2
+controlplane_hostname: "10.90.0.152"
+controlplane_port: 31311
 
 ngic_dp:
   images:
-    init: "ngick8stesting/c3po-mmeinit"
-    dp: "ngick8stesting/ngic-dp:690f418"
+    init: "node1:30500/ngick8stesting/c3po-mmeinit"
+    dp: "node1:30500/ngick8stesting/ngic-dp:690f418"
   ports:
     sx: 20
+    sx_external: 31310
   replicas: 1
   resources:
     cpu: 8
-    mem: "1Gi"
+    mem: "8Gi"
     hugepage: "8Gi"
   config:
     rtr_sgi_ip: "13.1.1.254"
     sgi_mask: "255.255.255.0"
     dpdk_enabled: false
-    hugepage_enabled: true
+    hugepage_enabled: false
 
 namespace: epc
