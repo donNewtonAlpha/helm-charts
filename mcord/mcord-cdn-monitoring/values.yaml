@@ -13,35 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Default values for vOLT
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+cdn_remote_host: 10.90.0.141
+cdn_local_host: 10.90.0.153
+prometheus_host: 10.90.0.152
 
-replicaCount: 1
+cadvisor:
+  image: google/cadvisor:latest
+  nodePort: 8888
+  enabled: true
 
-nameOverride: ""
-fullnameOverride: ""
+prometheus:
+  image: prom/prometheus:v2.3.1
+  node_selector: node2
+  nodePort: 31000
+  interval: 10s
+  enabled: true
 
-image:
-  repository: 'xosproject/volt-synchronizer'
-  tag: '{{ .Chart.AppVersion }}'
-  pullPolicy: 'Always'
-
-global:
-  registry: ''
-
-xosAdminUser: "admin@opencord.org"
-xosAdminPassword: "letmein"
-xosCoreService: "xos-core:50051"
-
-volthaRestService: "voltha.voltha.svc.cluster.local"
-onosRestService: "onos-ui.default.svc.cluster.local"
-kafkaService: "cord-kafka"
-
-resources: {}
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+grafana:
+  image: grafana/grafana:5.2.2
+  node_selector: node2
+  nodePort: 30000
+  adminUser: admin
+  adminPassword: admin
+  enabled: true
